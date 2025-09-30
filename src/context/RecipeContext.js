@@ -11,7 +11,7 @@ export const useRecipes = () => {
     return context;
 };
 
-// Mock recipe data with comprehensive structure
+// Mock recipe data with comprehensive structure (outside component)
 const mockRecipes = [
     {
         id: '1',
@@ -230,126 +230,139 @@ const mockRecipes = [
     }
 ];
 
-useEffect(() => {
-    // Load mock data
-    setRecipes(mockRecipes);
-}, []);
+export const RecipeProvider = ({ children }) => {
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [filters, setFilters] = useState({
+        cuisine: '',
+        difficulty: '',
+        cookingTime: '',
+        search: '',
+        tags: []
+    });
 
-const searchRecipes = async (query) => {
-    setLoading(true);
-    try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
+    useEffect(() => {
+        // Load mock data
+        setRecipes(mockRecipes);
+    }, []);
 
-        const filtered = mockRecipes.filter(recipe =>
-            recipe.title.toLowerCase().includes(query.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(query.toLowerCase()) ||
-            recipe.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
-        );
+    const searchRecipes = async (query) => {
+        setLoading(true);
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const filtered = mockRecipes.filter(recipe =>
+                recipe.title.toLowerCase().includes(query.toLowerCase()) ||
+                recipe.description.toLowerCase().includes(query.toLowerCase()) ||
+                recipe.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+            );
+
+            setRecipes(filtered);
+            return filtered;
+        } catch (error) {
+            toast.error('Search failed. Please try again.');
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filterRecipes = (newFilters) => {
+        setFilters(newFilters);
+
+        let filtered = mockRecipes;
+
+        if (newFilters.search) {
+            filtered = filtered.filter(recipe =>
+                recipe.title.toLowerCase().includes(newFilters.search.toLowerCase()) ||
+                recipe.description.toLowerCase().includes(newFilters.search.toLowerCase()) ||
+                recipe.tags.some(tag => tag.toLowerCase().includes(newFilters.search.toLowerCase()))
+            );
+        }
+
+        if (newFilters.cuisine) {
+            filtered = filtered.filter(recipe => recipe.cuisine === newFilters.cuisine);
+        }
+
+        if (newFilters.difficulty) {
+            filtered = filtered.filter(recipe => recipe.difficulty === newFilters.difficulty);
+        }
+
+        if (newFilters.cookingTime) {
+            const timeRanges = {
+                'quick': [0, 30],
+                'medium': [31, 60],
+                'long': [61, 999]
+            };
+            const [min, max] = timeRanges[newFilters.cookingTime] || [0, 999];
+            filtered = filtered.filter(recipe => recipe.cookingTime >= min && recipe.cookingTime <= max);
+        }
+
+        if (newFilters.tags.length > 0) {
+            filtered = filtered.filter(recipe =>
+                newFilters.tags.some(tag => recipe.tags.includes(tag))
+            );
+        }
 
         setRecipes(filtered);
-        return filtered;
-    } catch (error) {
-        toast.error('Search failed. Please try again.');
-        return [];
-    } finally {
-        setLoading(false);
-    }
-};
-
-const filterRecipes = (newFilters) => {
-    setFilters(newFilters);
-
-    let filtered = mockRecipes;
-
-    if (newFilters.search) {
-        filtered = filtered.filter(recipe =>
-            recipe.title.toLowerCase().includes(newFilters.search.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(newFilters.search.toLowerCase()) ||
-            recipe.tags.some(tag => tag.toLowerCase().includes(newFilters.search.toLowerCase()))
-        );
-    }
-
-    if (newFilters.cuisine) {
-        filtered = filtered.filter(recipe => recipe.cuisine === newFilters.cuisine);
-    }
-
-    if (newFilters.difficulty) {
-        filtered = filtered.filter(recipe => recipe.difficulty === newFilters.difficulty);
-    }
-
-    if (newFilters.cookingTime) {
-        const timeRanges = {
-            'quick': [0, 30],
-            'medium': [31, 60],
-            'long': [61, 999]
-        };
-        const [min, max] = timeRanges[newFilters.cookingTime] || [0, 999];
-        filtered = filtered.filter(recipe => recipe.cookingTime >= min && recipe.cookingTime <= max);
-    }
-
-    if (newFilters.tags.length > 0) {
-        filtered = filtered.filter(recipe =>
-            newFilters.tags.some(tag => recipe.tags.includes(tag))
-        );
-    }
-
-    setRecipes(filtered);
-};
-
-const getRecipeById = (id) => {
-    return mockRecipes.find(recipe => recipe.id === id);
-};
-
-const getTrendingRecipes = () => {
-    return mockRecipes.filter(recipe => recipe.trending);
-};
-
-const getPopularRecipes = () => {
-    return [...mockRecipes].sort((a, b) => b.rating - a.rating).slice(0, 6);
-};
-
-const addRecipe = (recipeData) => {
-    const newRecipe = {
-        id: Date.now().toString(),
-        ...recipeData,
-        createdAt: new Date().toISOString(),
-        trending: false
     };
-    setRecipes(prev => [newRecipe, ...prev]);
-    toast.success('Recipe added successfully!');
-    return newRecipe;
+
+    const getRecipeById = (id) => {
+        return mockRecipes.find(recipe => recipe.id === id);
+    };
+
+    const getTrendingRecipes = () => {
+        return mockRecipes.filter(recipe => recipe.trending);
+    };
+
+    const getPopularRecipes = () => {
+        return [...mockRecipes].sort((a, b) => b.rating - a.rating).slice(0, 6);
+    };
+
+    const addRecipe = (recipeData) => {
+        const newRecipe = {
+            id: Date.now().toString(),
+            ...recipeData,
+            createdAt: new Date().toISOString(),
+            trending: false
+        };
+        setRecipes(prev => [newRecipe, ...prev]);
+        toast.success('Recipe added successfully!');
+        return newRecipe;
+    };
+
+    const updateRecipe = (id, updates) => {
+        setRecipes(prev => prev.map(recipe =>
+            recipe.id === id ? { ...recipe, ...updates } : recipe
+        ));
+        toast.success('Recipe updated successfully!');
+    };
+
+    const deleteRecipe = (id) => {
+        setRecipes(prev => prev.filter(recipe => recipe.id !== id));
+        toast.success('Recipe deleted successfully!');
+    };
+
+    const value = {
+        recipes,
+        loading,
+        filters,
+        searchRecipes,
+        filterRecipes,
+        getRecipeById,
+        getTrendingRecipes,
+        getPopularRecipes,
+        addRecipe,
+        updateRecipe,
+        deleteRecipe
+    };
+
+    return (
+        <RecipeContext.Provider value={value}>
+            {children}
+        </RecipeContext.Provider>
+    );
 };
 
-const updateRecipe = (id, updates) => {
-    setRecipes(prev => prev.map(recipe =>
-        recipe.id === id ? { ...recipe, ...updates } : recipe
-    ));
-    toast.success('Recipe updated successfully!');
-};
-
-const deleteRecipe = (id) => {
-    setRecipes(prev => prev.filter(recipe => recipe.id !== id));
-    toast.success('Recipe deleted successfully!');
-};
-
-const value = {
-    recipes,
-    loading,
-    filters,
-    searchRecipes,
-    filterRecipes,
-    getRecipeById,
-    getTrendingRecipes,
-    getPopularRecipes,
-    addRecipe,
-    updateRecipe,
-    deleteRecipe
-};
-
-return (
-    <RecipeContext.Provider value={value}>
-        {children}
-    </RecipeContext.Provider>
-);
-};
+export default RecipeContext;
