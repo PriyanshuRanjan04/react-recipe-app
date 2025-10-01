@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
     Clock,
     Users,
@@ -20,7 +21,8 @@ const RecipeDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { getRecipeById } = useRecipes();
-    const { user, addToFavorites, removeFromFavorites } = useAuth();
+    const { user, token, addToFavorites, removeFromFavorites } = useAuth();
+    const queryClient = useQueryClient()
 
     const [recipe, setRecipe] = useState(null);
     const [servings, setServings] = useState(4);
@@ -30,6 +32,8 @@ const RecipeDetail = () => {
     const [timerMinutes, setTimerMinutes] = useState(0);
     const [timerSeconds, setTimerSeconds] = useState(0);
     const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [newRating, setNewRating] = useState(0);
+    const [newReviewText, setNewReviewText] = useState('');
 
     useEffect(() => {
         const recipeData = getRecipeById(id);
@@ -139,6 +143,41 @@ const RecipeDetail = () => {
         return <div className="loading">Loading recipe...</div>;
     }
 
+    // Reviews fetching
+    const reviewsQuery = useQuery({
+        queryKey: ['reviews', id],
+        queryFn: async () => {
+            const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/recipes/${id}/reviews`)
+            if (!res.ok) throw new Error('Failed to load reviews')
+            return res.json()
+        }
+    })
+
+    const addReviewMutation = useMutation({
+        mutationFn: async ({ rating, text }) => {
+            const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/recipes/${id}/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ rating, text })
+            })
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({ message: 'Failed to submit review' }))
+                throw new Error(data.message || 'Failed to submit review')
+            }
+            return res.json()
+        },
+        onSuccess: () => {
+            setNewRating(0)
+            setNewReviewText('')
+            queryClient.invalidateQueries({ queryKey: ['reviews', id] })
+            toast.success('Thanks for your review!')
+        },
+        onError: (e) => toast.error(e.message)
+    })
+
     return (
         <div className="recipe-detail">
             <motion.div
@@ -187,7 +226,17 @@ const RecipeDetail = () => {
                     </div>
 
                     <div className="recipe-actions">
-                        <button className="btn primary">
+                        <button className="btn primary" onClick={() => {
+                            const lines = recipe.ingredients.map((i) => `• ${i.amount} ${i.name}`)
+                            const text = `Shopping List for ${recipe.title}\n\n${lines.join('\n')}`
+                            const blob = new Blob([text], { type: 'text/plain' })
+                            const url = URL.createObjectURL(blob)
+                            const a = document.createElement('a')
+                            a.href = url
+                            a.download = `${recipe.title}-shopping-list.txt`
+                            a.click()
+                            URL.revokeObjectURL(url)
+                        }}>
                             <ShoppingCart />
                             Add to Shopping List
                         </button>
@@ -218,6 +267,12 @@ const RecipeDetail = () => {
                         onClick={() => setActiveTab('nutrition')}
                     >
                         Nutrition
+                    </button>
+                    <button
+                        className={`tab ${activeTab === 'reviews' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('reviews')}
+                    >
+                        Reviews
                     </button>
                 </div>
 
@@ -287,6 +342,61 @@ const RecipeDetail = () => {
                                     <span className="label">Fiber</span>
                                     <span className="value">{recipe.nutritionalInfo.fiber}g</span>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'reviews' && (
+                        <div className="reviews-section">
+                            <h3>Ratings & Reviews</h3>
+                            {user ? (
+                                <div className="add-review" aria-label="Add your review">
+                                    <div className="rating-input" role="radiogroup" aria-label="Rate this recipe">
+                                        {[1, 2, 3, 4, 5].map((n) => (
+                                            <button
+                                                key={n}
+                                                type="button"
+                                                className={n <= newRating ? 'star active' : 'star'}
+                                                onClick={() => setNewRating(n)}
+                                                aria-pressed={n === newRating}
+                                                aria-label={`${n} star${n > 1 ? 's' : ''}`}
+                                            >
+                                                <Star />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <textarea
+                                        value={newReviewText}
+                                        onChange={(e) => setNewReviewText(e.target.value)}
+                                        placeholder="Share a quick thought (optional)"
+                                        rows={3}
+                                    />
+                                    <button
+                                        className="btn"
+                                        disabled={addReviewMutation.isLoading || newRating === 0}
+                                        onClick={() => addReviewMutation.mutate({ rating: newRating, text: newReviewText })}
+                                    >
+                                        {addReviewMutation.isLoading ? 'Submitting...' : 'Submit Review'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <p>Please login to leave a rating.</p>
+                            )}
+
+                            <div className="reviews-list" aria-live="polite">
+                                {reviewsQuery.isLoading && <div>Loading reviews...</div>}
+                                {reviewsQuery.data && reviewsQuery.data.reviews.length === 0 && (
+                                    <p>No reviews yet. Be the first!</p>
+                                )}
+                                {reviewsQuery.data && reviewsQuery.data.reviews.map((rv) => (
+                                    <div key={rv._id} className="review-item">
+                                        <div className="review-head">
+                                            <span className="rating">{'★'.repeat(rv.rating)}{'☆'.repeat(5 - rv.rating)}</span>
+                                            <span className="date">{new Date(rv.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        {rv.text && <p className="text">{rv.text}</p>}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}

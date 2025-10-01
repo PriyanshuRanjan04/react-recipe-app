@@ -6,6 +6,7 @@ import { useRecipes } from '../context/RecipeContext'
 import { useAuth } from '../context/AuthContext'
 import AdvancedSearch from '../components/search/AdvancedSearch'
 import PreviousSearches from "../components/PreviousSearches"
+import SkeletonCard from "../components/SkeletonCard"
 
 const RecipeCard = ({ recipe }) => {
     const { user, addToFavorites, removeFromFavorites } = useAuth()
@@ -35,7 +36,15 @@ const RecipeCard = ({ recipe }) => {
         >
             <Link to={`/recipe/${recipe.id}`} className="recipe-link">
                 <div className="recipe-image">
-                    <img src={recipe.image} alt={recipe.title} />
+                    <img
+                        src={recipe.image}
+                        alt={`${recipe.title} — ${recipe.cuisine} cuisine`}
+                        loading="lazy"
+                        width="640"
+                        height="420"
+                        srcSet={`${recipe.image}&w=480 480w, ${recipe.image}&w=640 640w, ${recipe.image}&w=960 960w`}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     <div className="recipe-overlay">
                         <button
                             className={`favorite-btn ${isFavorite ? 'active' : ''}`}
@@ -77,7 +86,15 @@ const RecipeCard = ({ recipe }) => {
                     </div>
 
                     <div className="recipe-author">
-                        <img src={recipe.author.avatar} alt={recipe.author.name} />
+                        <img
+                            src={recipe.author.avatar}
+                            alt={`${recipe.author.name}, ${recipe.author.cuisine} chef`}
+                            loading="lazy"
+                            width="32"
+                            height="32"
+                            srcSet={`${recipe.author.avatar}&w=32 32w, ${recipe.author.avatar}&w=48 48w, ${recipe.author.avatar}&w=64 64w`}
+                            sizes="32px"
+                        />
                         <span>By {recipe.author.name}</span>
                     </div>
                 </div>
@@ -99,23 +116,34 @@ export default function Recipes() {
         setActiveTab(tab)
         switch (tab) {
             case 'trending':
-                setDisplayedRecipes(getTrendingRecipes())
+                setDisplayedRecipes(balanceIndianToGlobal(getTrendingRecipes()))
                 break
             case 'popular':
-                setDisplayedRecipes(getPopularRecipes())
+                setDisplayedRecipes(balanceIndianToGlobal(getPopularRecipes()))
                 break
             default:
-                setDisplayedRecipes(recipes)
+                setDisplayedRecipes(balanceIndianToGlobal(recipes))
         }
     }
 
     const handleSearch = (filters) => {
         // This will be handled by the RecipeContext
-        setDisplayedRecipes(recipes)
+        setDisplayedRecipes(balanceIndianToGlobal(recipes))
+    }
+
+    function balanceIndianToGlobal(list) {
+        const indian = list.filter(r => r.cuisine === 'Indian')
+        const global = list.filter(r => r.cuisine !== 'Indian')
+        const targetIndian = Math.max(Math.floor(list.length * 0.7), 1)
+        const targetGlobal = list.length - targetIndian
+        return [
+            ...indian.slice(0, targetIndian),
+            ...global.slice(0, targetGlobal)
+        ]
     }
 
     return (
-        <div className="recipes-page">
+        <div className="recipes-page bg-page-recipes-rose">
             <div className="recipes-header">
                 <h1>Discover Amazing Recipes</h1>
                 <p>Find your next favorite dish from our collection of delicious recipes</p>
@@ -149,7 +177,11 @@ export default function Recipes() {
             <PreviousSearches />
 
             {loading ? (
-                <div className="loading">Loading recipes...</div>
+                <div className="recipes-container">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <SkeletonCard key={i} />
+                    ))}
+                </div>
             ) : (
                 <motion.div
                     className="recipes-container"

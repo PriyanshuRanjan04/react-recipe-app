@@ -15,36 +15,35 @@ export const useRecipes = () => {
 const mockRecipes = [
     {
         id: '1',
-        title: 'Chicken Pan Pizza',
-        description: 'A delicious homemade pizza with crispy crust and fresh toppings',
-        image: '/img/gallery/img_1.jpg',
+        title: 'Hyderabadi Biryani',
+        description: 'Fragrant basmati rice layered with spiced meat, slow-cooked to perfection',
+        image: 'https://images.unsplash.com/photo-1604908176997-43162cea1735?q=80&w=1200&auto=format&fit=crop',
         author: {
-            id: '1',
-            name: 'Juan Carlos',
-            avatar: '/img/top-chiefs/img_1.jpg',
-            cuisine: 'Mexican'
+            id: '6',
+            name: 'Aarav Singh',
+            avatar: '/img/top-chiefs/img_6.jpg',
+            cuisine: 'Indian'
         },
-        cuisine: 'Italian',
+        cuisine: 'Indian',
         difficulty: 'Medium',
         cookingTime: 45,
         servings: 4,
         rating: 4.5,
         reviewCount: 128,
-        tags: ['pizza', 'italian', 'dinner', 'family'],
+        tags: ['biryani', 'indian', 'rice', 'dinner'],
         ingredients: [
-            { name: 'Pizza dough', amount: '1 lb', unit: 'lb' },
-            { name: 'Chicken breast', amount: '2', unit: 'pieces' },
-            { name: 'Mozzarella cheese', amount: '2 cups', unit: 'cups' },
-            { name: 'Tomato sauce', amount: '1/2 cup', unit: 'cup' },
-            { name: 'Olive oil', amount: '2 tbsp', unit: 'tbsp' }
+            { name: 'Basmati rice', amount: '2', unit: 'cups' },
+            { name: 'Chicken', amount: '500', unit: 'g' },
+            { name: 'Yogurt', amount: '1', unit: 'cup' },
+            { name: 'Biryani masala', amount: '2', unit: 'tbsp' },
+            { name: 'Onions', amount: '2', unit: 'large' }
         ],
         instructions: [
-            'Preheat oven to 450°F (230°C)',
-            'Roll out the pizza dough on a floured surface',
-            'Cook chicken breast and slice into strips',
-            'Spread tomato sauce on dough',
-            'Add chicken, cheese, and other toppings',
-            'Bake for 12-15 minutes until golden'
+            'Soak basmati rice for 30 minutes',
+            'Marinate chicken with yogurt and spices',
+            'Fry onions until golden and set aside',
+            'Parboil rice and layer with chicken and onions',
+            'Dum cook for 25 minutes until fragrant'
         ],
         nutritionalInfo: {
             calories: 320,
@@ -58,36 +57,32 @@ const mockRecipes = [
     },
     {
         id: '2',
-        title: 'Spaghetti and Meatballs',
-        description: 'Classic Italian pasta with homemade meatballs in rich tomato sauce',
-        image: '/img/gallery/img_4.jpg',
+        title: 'Masala Dosa',
+        description: 'Crispy fermented crepes filled with spiced potato masala, served with chutney',
+        image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?q=80&w=1200&auto=format&fit=crop',
         author: {
-            id: '2',
-            name: 'John Doe',
-            avatar: '/img/top-chiefs/img_2.jpg',
-            cuisine: 'Japanese'
+            id: '6',
+            name: 'Aarav Singh',
+            avatar: '/img/top-chiefs/img_6.jpg',
+            cuisine: 'Indian'
         },
-        cuisine: 'Italian',
+        cuisine: 'Indian',
         difficulty: 'Easy',
         cookingTime: 30,
         servings: 6,
         rating: 4.8,
         reviewCount: 95,
-        tags: ['pasta', 'italian', 'comfort food', 'dinner'],
+        tags: ['dosa', 'south indian', 'breakfast'],
         ingredients: [
-            { name: 'Spaghetti', amount: '1 lb', unit: 'lb' },
-            { name: 'Ground beef', amount: '1 lb', unit: 'lb' },
-            { name: 'Breadcrumbs', amount: '1/2 cup', unit: 'cup' },
-            { name: 'Egg', amount: '1', unit: 'piece' },
-            { name: 'Tomato sauce', amount: '2 cups', unit: 'cups' }
+            { name: 'Dosa batter', amount: '3', unit: 'cups' },
+            { name: 'Potatoes', amount: '3', unit: 'pieces' },
+            { name: 'Onion', amount: '1', unit: 'piece' },
+            { name: 'Mustard seeds', amount: '1', unit: 'tsp' }
         ],
         instructions: [
-            'Mix ground beef, breadcrumbs, and egg for meatballs',
-            'Form into 1-inch balls',
-            'Brown meatballs in a large skillet',
-            'Add tomato sauce and simmer for 20 minutes',
-            'Cook spaghetti according to package directions',
-            'Serve meatballs and sauce over spaghetti'
+            'Cook dosa on tawa until crisp',
+            'Prepare potato masala with spices',
+            'Fill dosa with masala and serve with chutney'
         ],
         nutritionalInfo: {
             calories: 450,
@@ -101,100 +96,91 @@ const mockRecipes = [
     },
     {
         id: '3',
-        title: 'American Cheese Burger',
-        description: 'Juicy beef patty with melted cheese, fresh lettuce, and special sauce',
-        image: '/img/gallery/img_5.jpg',
+        title: 'Pani Puri',
+        description: 'Crispy puris filled with tangy tamarind water, spiced potatoes and chutneys',
+        image: 'https://images.unsplash.com/photo-1645112400698-5a2ab0e86259?q=80&w=1200&auto=format&fit=crop',
         author: {
-            id: '3',
-            name: 'Erich Maria',
-            avatar: '/img/top-chiefs/img_3.jpg',
-            cuisine: 'Italian'
+            id: '6',
+            name: 'Aarav Singh',
+            avatar: '/img/top-chiefs/img_6.jpg',
+            cuisine: 'Indian'
         },
-        cuisine: 'American',
+        cuisine: 'Indian',
         difficulty: 'Easy',
-        cookingTime: 20,
+        cookingTime: 40,
         servings: 4,
-        rating: 4.3,
+        rating: 4.6,
         reviewCount: 67,
-        tags: ['burger', 'american', 'lunch', 'grilled'],
+        tags: ['chaat', 'street food', 'snack'],
         ingredients: [
-            { name: 'Ground beef', amount: '1 lb', unit: 'lb' },
-            { name: 'Burger buns', amount: '4', unit: 'pieces' },
-            { name: 'Cheddar cheese', amount: '4 slices', unit: 'slices' },
-            { name: 'Lettuce', amount: '1 head', unit: 'head' },
-            { name: 'Tomato', amount: '2', unit: 'pieces' }
+            { name: 'Puris', amount: '24', unit: 'pieces' },
+            { name: 'Potatoes', amount: '3', unit: 'pieces' },
+            { name: 'Tamarind', amount: '1/4', unit: 'cup' },
+            { name: 'Mint', amount: '1/2', unit: 'cup' }
         ],
         instructions: [
-            'Form ground beef into 4 patties',
-            'Season with salt and pepper',
-            'Grill patties for 4-5 minutes per side',
-            'Add cheese during last minute of cooking',
-            'Toast burger buns lightly',
-            'Assemble burgers with lettuce, tomato, and condiments'
+            'Prepare pani and fillings',
+            'Crack puris, add fillings and pour pani, serve immediately'
         ],
         nutritionalInfo: {
-            calories: 520,
-            protein: 32,
-            carbs: 35,
-            fat: 28,
-            fiber: 2
+            calories: 300,
+            protein: 8,
+            carbs: 45,
+            fat: 10,
+            fiber: 4
         },
         createdAt: '2024-01-08',
         trending: true
     },
     {
         id: '4',
-        title: 'Mutton Biriyani',
-        description: 'Fragrant basmati rice with tender mutton and aromatic spices',
-        image: '/img/gallery/img_6.jpg',
+        title: 'Butter Chicken',
+        description: 'Creamy tomato gravy with tender chicken, finished with butter and cream',
+        image: 'https://images.unsplash.com/photo-1601050690114-b3f4c0b1e4b5?q=80&w=1200&auto=format&fit=crop',
         author: {
-            id: '5',
-            name: 'Blake Lively',
-            avatar: '/img/top-chiefs/img_5.jpg',
-            cuisine: 'French'
+            id: '6',
+            name: 'Aarav Singh',
+            avatar: '/img/top-chiefs/img_6.jpg',
+            cuisine: 'Indian'
         },
         cuisine: 'Indian',
-        difficulty: 'Hard',
-        cookingTime: 120,
-        servings: 6,
-        rating: 4.7,
-        reviewCount: 89,
-        tags: ['biriyani', 'indian', 'rice', 'spicy', 'special occasion'],
+        difficulty: 'Medium',
+        cookingTime: 60,
+        servings: 4,
+        rating: 4.8,
+        reviewCount: 210,
+        tags: ['curry', 'north indian', 'dinner'],
         ingredients: [
-            { name: 'Basmati rice', amount: '2 cups', unit: 'cups' },
-            { name: 'Mutton', amount: '1 lb', unit: 'lb' },
-            { name: 'Onions', amount: '3 large', unit: 'pieces' },
-            { name: 'Yogurt', amount: '1 cup', unit: 'cup' },
-            { name: 'Garam masala', amount: '2 tbsp', unit: 'tbsp' }
+            { name: 'Chicken', amount: '500', unit: 'g' },
+            { name: 'Tomato puree', amount: '1', unit: 'cup' },
+            { name: 'Cream', amount: '1/2', unit: 'cup' },
+            { name: 'Butter', amount: '2', unit: 'tbsp' }
         ],
         instructions: [
-            'Marinate mutton with yogurt and spices for 2 hours',
-            'Fry sliced onions until golden brown',
-            'Cook mutton with half the fried onions',
-            'Parboil rice with whole spices',
-            'Layer rice over mutton in a heavy pot',
-            'Cover and cook on low heat for 45 minutes'
+            'Marinate chicken and cook in tandoori style',
+            'Simmer tomato gravy with spices',
+            'Combine chicken with gravy, finish with cream and butter'
         ],
         nutritionalInfo: {
-            calories: 580,
-            protein: 35,
-            carbs: 65,
-            fat: 18,
-            fiber: 4
+            calories: 520,
+            protein: 30,
+            carbs: 22,
+            fat: 28,
+            fiber: 3
         },
         createdAt: '2024-01-05',
         trending: false
     },
     {
         id: '5',
-        title: 'Japanese Sushi',
+        title: 'Sushi',
         description: 'Fresh salmon and avocado rolls with perfectly seasoned rice',
-        image: '/img/gallery/img_10.jpg',
+        image: 'https://images.unsplash.com/photo-1548365328-9f547fb095de?q=80&w=1200&auto=format&fit=crop',
         author: {
-            id: '6',
-            name: 'Ben Affleck',
-            avatar: '/img/top-chiefs/img_6.jpg',
-            cuisine: 'Indian'
+            id: '2',
+            name: 'John Doe',
+            avatar: '/img/top-chiefs/img_2.jpg',
+            cuisine: 'Japanese'
         },
         cuisine: 'Japanese',
         difficulty: 'Hard',

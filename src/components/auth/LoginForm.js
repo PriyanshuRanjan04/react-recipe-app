@@ -71,11 +71,11 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
                 <div className="form-options">
                     <label className="checkbox-label">
-                        <input type="checkbox" />
+                        <input type="checkbox" aria-label="Remember me" />
                         <span className="checkmark"></span>
                         Remember me
                     </label>
-                    <a href="#forgot" className="forgot-link">Forgot Password?</a>
+                    <a href="/auth/forgot" className="forgot-link">Forgot Password?</a>
                 </div>
 
                 <button

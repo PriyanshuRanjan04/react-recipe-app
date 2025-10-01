@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import LoginForm from '../../components/auth/LoginForm';
 import RegisterForm from '../../components/auth/RegisterForm';
 import { ChefHat } from 'lucide-react';
+import SpiceParticles from '../../components/SpiceParticles';
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +12,8 @@ const AuthPage = () => {
     const switchToLogin = () => setIsLogin(true);
 
     return (
-        <div className="auth-page">
+        <div className="auth-page" style={{ position: 'relative' }}>
+            <SpiceParticles />
             <div className="auth-container">
                 <motion.div
                     className="auth-left"
@@ -21,7 +23,7 @@ const AuthPage = () => {
                 >
                     <div className="auth-brand">
                         <ChefHat className="brand-icon" />
-                        <h1>FoodiesHub</h1>
+                        <h1>Dishcovery</h1>
                         <p>Discover, Create, and Share Amazing Recipes</p>
                     </div>
                     <div className="auth-features">

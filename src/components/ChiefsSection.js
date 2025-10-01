@@ -1,47 +1,47 @@
 import ChiefCard from "./ChiefCard"
 
-export default function ChiefsSection(){
+export default function ChiefsSection() {
     const chiefs = [
         {
-            name: "Juan Carlos",
-            img: "/img/top-chiefs/img_1.jpg",
-            recipesCount: "10",
-            cuisine: "Mexican",
+            name: "Aarav Singh",
+            img: "https://images.unsplash.com/photo-1517244683847-7456b63c5969?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "28",
+            cuisine: "Indian",
         },
         {
-            name: "John Doe",
-            img: "/img/top-chiefs/img_2.jpg",
-            recipesCount: "05",
-            cuisine: "Japanese",
+            name: "Lakshmi Rao",
+            img: "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "22",
+            cuisine: "South Indian",
         },
         {
-            name: "Erich Maria",
-            img: "/img/top-chiefs/img_3.jpg",
-            recipesCount: "13",
-            cuisine: "Italian",
+            name: "Harpreet Kaur",
+            img: "https://images.unsplash.com/photo-1548946526-f69e2424cf45?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "19",
+            cuisine: "Punjabi",
         },
         {
-            name: "Chris Brown",
-            img: "/img/top-chiefs/img_4.jpg",
-            recipesCount: "08",
-            cuisine: "American"
+            name: "Zoya Khan",
+            img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "17",
+            cuisine: "Lucknowi",
         },
         {
-            name: "Blake Lively",
-            img: "/img/top-chiefs/img_5.jpg",
-            recipesCount: "09",
-            cuisine: "French"
+            name: "Rohan Iyer",
+            img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "24",
+            cuisine: "Maharashtrian",
         },
         {
-            name: "Ben Affleck",
-            img: "/img/top-chiefs/img_6.jpg",
-            recipesCount: "04",
-            cuisine: "Indian"
+            name: "Meera Nair",
+            img: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=640&auto=format&fit=crop",
+            recipesCount: "21",
+            cuisine: "Kerala",
         }
     ]
     return (
-        <div className="section chiefs">
-            <h1 className="title">Our Top Chiefs</h1>
+        <div className="section chiefs bg-chefs-mint">
+            <h1 className="title">Our Top Chefs</h1>
             <div className="top-chiefs-container">
                 {/* <ChiefCard />
                 <ChiefCard />
@@ -49,7 +49,7 @@ export default function ChiefsSection(){
                 <ChiefCard />
                 <ChiefCard />
                 <ChiefCard /> */}
-                { chiefs.map(chief => <ChiefCard key={chief.name} chief={chief} />) }
+                {chiefs.map(chief => <ChiefCard key={chief.name} chief={chief} />)}
             </div>
         </div>
     )
