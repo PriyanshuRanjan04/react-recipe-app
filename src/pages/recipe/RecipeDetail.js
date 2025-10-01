@@ -144,14 +144,16 @@ const RecipeDetail = () => {
     }
 
     // Reviews fetching
-    const reviewsQuery = useQuery({
-        queryKey: ['reviews', id],
-        queryFn: async () => {
-            const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/api/recipes/${id}/reviews`)
-            if (!res.ok) throw new Error('Failed to load reviews')
-            return res.json()
-        }
-    })
+    const { data } = useQuery(
+        ["recipe", recipeId],
+        () => fetchRecipe(recipeId),
+        { enabled: !!recipeId } // only runs if recipeId exists
+    );
+
+    const mutation = useMutation(saveRecipe, {
+        onSuccess: () => console.log("Recipe saved!"),
+    });
+
 
     const addReviewMutation = useMutation({
         mutationFn: async ({ rating, text }) => {
